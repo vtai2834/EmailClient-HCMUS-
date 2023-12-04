@@ -1,0 +1,29 @@
+{
+    "General": {
+      "Username": "Bao Mun <baomun221@gmail.com>",
+      "Password": "123bao",
+      "MailServer": "127.0.0.1",
+      "SMTP": 2225,
+      "POP3": 3335,
+      "Autoload": 10
+    },
+    "Filter": [
+      {
+        "From": ["ahihi@testing.com", "ahuu@testing.com"],
+        "ToFolder": "Project"
+      },
+      {
+        "Subject": ["urgent", "ASAP"],
+        "ToFolder": "Important"
+      },
+      {
+        "Content": ["report", "meeting"],
+        "ToFolder": "Work"
+      },
+      {
+        "Spam": ["virus", "hack", "crack"],
+        "ToFolder": "Spam"
+      }
+    ]
+}
+  
