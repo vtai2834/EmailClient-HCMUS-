@@ -1,9 +1,9 @@
 import socket
 import os
 import base64
-from ReadJSON import docJson
+from ReadJSON import readJson
 
-name, user, password, mailserver, smtp, pop3, autoload, project, important, work, spam = docJson()
+name, user, password, mailserver, smtp, pop3, autoload, project, important, work, spam = readJson()
 
 
 FORMAT = "utf8";
@@ -11,11 +11,11 @@ SERVER_PORT_POP3 = int(pop3)
 MAX_SIZE = 1024*3
 
 #chuadoc
-def check_doc(data):
-    if data[-7:] == 'chuadoc': return 1;
-    return 0;
+def check_Readed(data):
+    if data[-7:] == 'chuadoc': return 1
+    return 0
 
-def Doc_Thu(folder):
+def Read_Mail(folder):
     list_data = []
     list_from = []
     list_sub = []
@@ -42,7 +42,7 @@ def Doc_Thu(folder):
 
 
     for i in range (len(list_data)):
-        if (check_doc(list_data[i]) == 1):
+        if (check_Readed(list_data[i]) == 1):
             print(str(i+1) + '. (chưa đọc)' +  ' <' + list_from[i] + '>, <' + list_sub[i] + '>')
         else:
             print(str(i+1) + '. <' + list_from[i] + '>, <' + list_sub[i] + '>')
@@ -106,7 +106,6 @@ def Doc_Thu(folder):
                     
                     res = list_data[check -1][idx_start : idx_end]
 
-                    # print(res)
                     #tên file đính kèm:
                     attachment_file = ''
                     if (list_data[check -1].find('Content-Type: application/octet-stream', pos, idx_end) != -1 or list_data[check -1].find('Content-Type: text/plain', pos, idx_end) != -1):
@@ -130,11 +129,11 @@ def Doc_Thu(folder):
                     pos = idx_end
 
     # đổi lại mail này thành mail đã đọc:
-    if (check_doc(list_data[check -1]) == 1):
+    if (check_Readed(list_data[check -1]) == 1):
         with open(folder + '/Mail' + str(check) + '.txt', "w") as attachment_file: # wb : mở file, xóa nd cũ, ghi nd mới
             attachment_file.write(list_data[check-1].replace('chuadoc', 'dadoc'))
 
-def chucNang_2(SERVER_PORT_POP3):
+def receive_mail(SERVER_PORT_POP3):
     list_sender = []
     list_subject = []
     # Create socket called clientSocket and establish a TCP connection with mailserver
@@ -183,18 +182,24 @@ def chucNang_2(SERVER_PORT_POP3):
         from_end_idx = response.find('Subject:')
         list_sender.append(response[from_start_idx : (from_end_idx - len('\r\n'))])
 
-        subject_start_idx = response.find('Subject:') + len('Subject:')
-        subject_end_idx = response.find('Content')
-        list_subject.append(response[subject_start_idx : (subject_end_idx - len('\r\n'))])
 
+        subject_start_idx = response.find('Subject: ') + len('Subject: ')
+        if (response.find('MIME-Version: 1.0') != -1):
+            if (response.find('This is a multi-part message in MIME format.') != -1):
+                subject_end_idx = response.find('This is a multi-part message in MIME format.') - len('\r\n\r\n')
+            else:
+                subject_end_idx = response.find('Content', subject_start_idx) - len('\r\n')
+        else:
+            subject_end_idx = response.find('Content', subject_start_idx) - len('\r\n')
+        list_subject.append(response[subject_start_idx : subject_end_idx])
 
-
+        
         # Xu ly loc mail:
         if (project.count(list_sender[i-1]) != 0):
             cnt = len(os.listdir('Project'))
             with open('Project/Mail' + str(cnt + 1) + '.txt', "w") as attachment_file: # xb : kiểm tra nếu chưa có file đó thì tạo ra file mới tự động, còn có rồi thì kh thực hiện
                 attachment_file.write(response + 'chuadoc') # tai mail ve folder luon mac dinh la chua doc
-        elif (important.count(list_subject[i-1]) != 0):
+        elif any(j in list_subject[i-1] for j in important):
             cnt = len(os.listdir('Important'))
             with open('Important/Mail' + str(cnt + 1) + '.txt', "w") as attachment_file:
                 attachment_file.write(response + 'chuadoc')
@@ -202,7 +207,7 @@ def chucNang_2(SERVER_PORT_POP3):
             cnt = len(os.listdir('Work'))
             with open('Work/Mail' + str(cnt + 1) + '.txt', "w") as attachment_file:
                 attachment_file.write(response + 'chuadoc')
-        elif (spam.count(list_subject[i-1]) != 0):
+        elif (any(j in list_subject[i-1] for j in spam) or any(response.find(i) != -1 for i in spam)):
             cnt = len(os.listdir('Spam'))
             with open('Spam/Mail' + str(cnt + 1) + '.txt', "w") as attachment_file:
                 attachment_file.write(response + 'chuadoc')
@@ -232,12 +237,12 @@ def chucNang_2(SERVER_PORT_POP3):
         if (not choose):
             break
         elif choose == '1':
-            Doc_Thu('Inbox')
+            Read_Mail('Inbox')
         elif choose == '2':
-            Doc_Thu('Project')
+            Read_Mail('Project')
         elif choose == '3':
-            Doc_Thu('Important')
+            Read_Mail('Important')
         elif choose == '4':
-            Doc_Thu('Work')
+            Read_Mail('Work')
         elif choose == '5':
-            Doc_Thu('Spam')
+            Read_Mail('Spam')

@@ -1,6 +1,6 @@
 import json
 
-def docJson():
+def readJson():
     with open('config.json', 'r') as file:
         content = file.read()
     
@@ -68,6 +68,3 @@ def docJson():
     # print(spam)
     
     return name, user, password, mailserver, smtp, pop3, autoload, project, important, work, spam
-    
-
-docJson()

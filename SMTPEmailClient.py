@@ -3,7 +3,7 @@ import os
 import base64
 
 FORMAT = "utf8"
-MAX_SIZE = 1024 * 3
+MAX_SIZE = 1024 * 3 #1MB = 1024KB -> 3M = 3 * 1024 KB
 
 #send TO and CC and BCC:
 def send_TO_CC_BCC(attachment_path, clientSocket, user, list_TO, list_CC, list_BCC, subject, content, to, cc, bcc):
@@ -128,7 +128,7 @@ def send_CC_BCC(attachment_path, clientSocket, user, list_CC, list_BCC, subject,
 
     # Gửi phần text của email
     clientSocket.send(b'--boundary\r\n')
-    clientSocket.send(b'Content-Type: text/plain;charset=UTF-8; format=flowed\r\n\r\n')
+    clientSocket.send(b'Content-Type: text/plain; charset=UTF-8; format=flowed\r\n\r\n')
     clientSocket.send(content.encode(FORMAT) + b'\r\n')
 
     # Đọc nội dung của file.txt và mã hóa base64
@@ -204,7 +204,6 @@ def send_TO_BCC(attachment_path, clientSocket, user, list_TO, list_BCC, subject,
     # Send QUIT command and get server response.
     clientSocket.send(b'QUIT\r\n')
     recv_quit = clientSocket.recv(1024).decode()
-
 #send TO and CC:
 def send_TO_CC(attachment_path, clientSocket, user, list_TO, list_CC, subject, content, to, cc):
     # Send HELO command and print server response.
@@ -252,7 +251,7 @@ def send_TO_CC(attachment_path, clientSocket, user, list_TO, list_CC, subject, c
 
     # Gửi phần text của email
     clientSocket.send(b'--boundary\r\n')
-    clientSocket.send(b'Content-Type: text/plain;charset=UTF-8; format=flowed\r\n\r\n')
+    clientSocket.send(b'Content-Type: text/plain; charset=UTF-8; format=flowed\r\n\r\n')
     clientSocket.send(content.encode(FORMAT) + b'\r\n')
 
     # Đọc nội dung của file.txt và mã hóa base64
