@@ -136,7 +136,7 @@ try:
         print("2. Để xem danh sách các email đã nhận")
         print("3. Thoát\n")
         choice = input("Bạn chọn: ")
-        print()
+        os.system("cls")
 
         if choice == "1":
             initializeClient = True

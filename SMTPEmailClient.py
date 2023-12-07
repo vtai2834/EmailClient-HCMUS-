@@ -121,7 +121,7 @@ def send_CC_BCC(attachment_path, clientSocket, user, list_CC, list_BCC, subject,
     if (recv[:3] != '354'):
         print('354 reply not received from server');
 
-    clientSocket.send(b'To: ' + cc.encode(FORMAT) + b'\r\n')
+    clientSocket.send(b'Cc: ' + cc.encode(FORMAT) + b'\r\n')
     clientSocket.send(b'From: ' + user.encode(FORMAT) + b'\r\n');
     clientSocket.send(b'Subject: ' + subject.encode(FORMAT) + b'\r\n');
     clientSocket.send(b'Content-Type: multipart/mixed; boundary="boundary"\r\n\r\n')
@@ -321,7 +321,7 @@ def send_TO(attachment_path, clientSocket, user, list_TO, subject, content):
     # Send QUIT command and get server response.
     clientSocket.send(b'QUIT\r\n')
     recv_quit = clientSocket.recv(1024).decode()
-    
+
 # Send CC
 def send_CC(attachment_path, clientSocket, user, list_CC, subject, content):
     # Send HELO command and print server response.
@@ -438,7 +438,9 @@ def send_File(attachment_path_list, clientSocket):
         else:
             print(f"File not found: {attachment_path}")
     size = size / 1024;
-    if (size > MAX_SIZE): return ;
+    if (size > MAX_SIZE): 
+        print("Dung lượng file vượt quá giới hạn 3MB")
+        return
 
     # gửi file đính kèm
     for attachment_path in attachment_path_list:
@@ -512,8 +514,6 @@ def send_File(attachment_path_list, clientSocket):
 
 def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, list_TO, list_CC, list_BCC, initializeClient):
     print("Đây là thông tin soạn email: (nếu không điền vui lòng nhấn enter để bỏ qua)")
-    answer = input()
-
     to = input("To: ")
     if not to:
         print("<enter>\n")
@@ -551,7 +551,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
 
         recv = clientSocket.recv(1024).decode()
-        print(recv)
+
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_TO_CC(list_File, clientSocket, user, list_TO, list_CC, subject, content, to, cc)
@@ -560,7 +560,6 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
 
         recv = clientSocket.recv(1024).decode()
-        print(recv)
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_TO_BCC(list_File, clientSocket, user, list_TO, list_BCC, subject, content, to, bcc)
@@ -569,7 +568,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
 
         recv = clientSocket.recv(1024).decode()
-        print(recv)
+
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_CC_BCC(list_File, clientSocket, user, list_CC, list_BCC, subject, content, cc, bcc)
@@ -578,7 +577,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
 
         recv = clientSocket.recv(1024).decode()
-        print(recv)
+
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_TO_CC_BCC(list_File, clientSocket, user, list_TO, list_CC, list_BCC, subject, content, to, cc, bcc)
@@ -587,7 +586,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
 
         recv = clientSocket.recv(1024).decode()
-        print(recv)
+
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_TO(list_File, clientSocket, user, list_TO, subject, content)
@@ -596,7 +595,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
         
         recv = clientSocket.recv(1024).decode()
-        print(recv)
+
         if recv[:3] != '220':
             print('\n 220 reply not received from server.')
         send_CC(list_File, clientSocket, user, list_CC, subject, content)
@@ -605,7 +604,7 @@ def send_mail(mailserver, SERVER_PORT_SMTP, user, subject, content, list_File, l
         clientSocket.connect((mailserver, SERVER_PORT_SMTP))
         for i in range(len(list_BCC)):
             recv = clientSocket.recv(1024).decode()
-            print(recv)
+    
             if recv[:3] != '220':
                 print('\n 220 reply not received from server.')
             send_BCC(list_File, clientSocket, user, list_BCC, subject, content)
