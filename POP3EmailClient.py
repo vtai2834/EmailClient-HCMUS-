@@ -67,7 +67,7 @@ def Read_Mail(folder):
                     data_idx = list_data[check-1].find('Content-Transfer-Encoding: 7bit') + len('Content-Transfer-Encoding: 7bit\r\n\r\n')
                     if (list_data[check-1].find('Content-Transfer-Encoding: base64') == -1): # khong co file đính kèm
                         data_idx_end = list_data[check-1].find('\r\n.\r\n')
-                    else: # không có file đính kèm
+                    else: # có file đính kèm
                         data_idx_end = list_data[check -1].find('--------------', data_idx) - len('\r\n')
                 else: #gui mail = python roi lay ve
                     data_idx = list_data[check-1].find('Content-Type: text/plain; charset=UTF-8; format=flowed') + len('Content-Type: text/plain; charset=UTF-8; format=flowed\r\n\r\n')
@@ -89,7 +89,7 @@ def Read_Mail(folder):
 
                 char = input('Trong email này có attached file, bạn có muốn save không : ')
                 if (char == 'có' or char == 'co'):
-                    path = input('Cho biết đường dẫn bạn muốn lưu (nhập thêm kí tự \ vào cuối): ')
+                    path = input('Cho biết đường dẫn bạn muốn lưu (nhập thêm kí tự / vào cuối, chúng tôi tự động cho tên file là download): ')
 
                     # xác định nếu có file đính kèm và lấy thong tin file:
                     pos = data_idx_end

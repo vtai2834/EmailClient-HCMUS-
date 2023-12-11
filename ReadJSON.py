@@ -4,8 +4,6 @@ def readJson():
     with open('config.json', 'r') as file:
         content = file.read()
     
-    # print(content)
-    
     name_Start = content.find("Username\": \"") + len("Username\": \"")
     name_End = content.find(" <")
     name = content[name_Start : name_End]
@@ -55,16 +53,5 @@ def readJson():
     spamTMP = content[spam_Start : spam_End]
     spam = spamTMP.split('\", \"')
     
-    # print(name)
-    # print(user)
-    # print(password)
-    # print(mailserver)
-    # print(smtp)
-    # print(pop3)
-    # print(autoload)
-    # print(project)
-    # print(important)
-    # print(work)
-    # print(spam)
     
     return name, user, password, mailserver, smtp, pop3, autoload, project, important, work, spam

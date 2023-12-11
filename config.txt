@@ -1,0 +1,20 @@
+General:
+Username: Quan Nguyen <ntquan@testing.com>
+Password: ahihi
+MailServer: 192.168.1.10
+SMTP: 3333
+POP3: 4444
+Autoload: 10
+
+Filter:
+//Di chuyển các email được gửi từ địa chỉ ahihi@testing.com và ahuu@testing.com vào thư mục Project
+From: ahihi@testing.com, ahuu@testing.com, ... - To folder: Project
+
+//Di chuyển các email subject có chứa “urgent”, “ASAP” vào thư mục Important
+Subject: "urgent", "ASAP", ... - To folder: Important
+
+//Di chuyển các email nội dung có chứa “report”, “meeting” vào thư mục Work
+Content: "report", "meeting", ...  - To folder: Work
+
+//Di chuyển các email mà subject hoặc nội dung có chứa “virus” “hack” “crack” vào thư mục Spam
+Spam: "virus", "hack", "crack", ... - To folder: Spam

@@ -120,11 +120,11 @@ def fetch_emails(username, password):
     # Send QUIT command and get server response.
     clientSocket.send(b'QUIT\r\n')
     recv_quit = clientSocket.recv(1024).decode()
-
+autoload = int(autoload)
 def auto_fetch_emails():
     while not stop_fetching:
         fetch_emails(user, password)
-        time.sleep(10)
+        time.sleep(autoload)
 try:
     # Start the auto-fetching thread
     fetch_thread = threading.Thread(target=auto_fetch_emails)
